@@ -1,9 +1,11 @@
 from fastapi import FastAPI, HTTPException, Depends
 from models import Order
 import mongo
-from auth_service.main import oauth2_scheme
+from auth_utils import oauth2_scheme
 
 app = FastAPI()
+
+
 
 @app.post("/orders")
 async def create_order(order: Order, token: str = Depends(oauth2_scheme)):
@@ -14,7 +16,7 @@ async def create_order(order: Order, token: str = Depends(oauth2_scheme)):
     if product["data"][0]["quantity"] < order.quantity:
         raise HTTPException(status_code=400, detail="Insufficient product quantity")
     # Create order
-    result = mongo.insert_document("order_db", "orders", order.dict())
+    result = mongo.insert_document("order_db", "orders", dict(order))
     if result["status"]:
         # Update product quantity
         mongo.update_document("product_db", "products", "_id", order.product_id, "quantity", product["data"][0]["quantity"] - order.quantity)

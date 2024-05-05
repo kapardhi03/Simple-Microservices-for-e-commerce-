@@ -1,7 +1,7 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
-uri = "mongodb+srv://product_db:vani@ec.qbzosto.mongodb.net/?retryWrites=true&w=majority&appName=ec"
+uri = "mongodb+srv://ec:vani@ec.i2xskoj.mongodb.net/?retryWrites=true&w=majority&appName=ec"
 
 '''
 FN -> fetch_documents

@@ -1,13 +1,14 @@
 from fastapi import FastAPI, HTTPException, Depends
 from models import Product
 from mongo import fetch_documents, insert_document, delete_document, update_document
-from auth_service.main import oauth2_scheme
+from auth_utils import oauth2_scheme
 
 app = FastAPI()
 
+
 @app.post("/products")
 async def create_product(product: Product, token: str = Depends(oauth2_scheme)):
-    result = insert_document("product_db", "products", product.dict())
+    result = insert_document("product_db", "products", dict(product))
     if result["status"]:
         return {"message": "Product created successfully"}
     else:

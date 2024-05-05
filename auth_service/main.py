@@ -1,10 +1,12 @@
 from fastapi import FastAPI, Depends, HTTPException
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm
 from models import User
 from mongo import fetch_documents, insert_document
+from auth_utils import oauth2_scheme
 
 app = FastAPI()
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+
 
 @app.post("/register")
 async def register_user(user: User):
@@ -14,7 +16,7 @@ async def register_user(user: User):
         raise HTTPException(status_code=400, detail="User already exists")
 
     # Create new user
-    result = insert_document("auth_db", "users", user.dict())
+    result = insert_document("auth_db", "users", dict(user))
     if result["status"]:
         return {"message": "User registered successfully"}
     else:
